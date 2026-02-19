@@ -4,6 +4,14 @@
 @section('description', 'Get in touch with Australia\'s most trusted education consultant. Book your free consultation today for expert guidance on your Australian education journey.')
 
 @section('content')
+@if($page && $page->body)
+{{-- Custom content from Admin: Edit in Site Pages → Contact Us --}}
+<section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none text-gray-700">{!! $page->body !!}</div>
+    </div>
+</section>
+@endif
 <!-- Contact Hero Section -->
 <section class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-yellow-500 py-20 lg:py-32 overflow-hidden">
     <div class="absolute inset-0 opacity-20">
@@ -12,6 +20,11 @@
         <div class="absolute top-1/2 left-1/2 w-24 h-24 bg-white rounded-full animate-pulse-slow blur-2xl"></div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        @if($page && $page->image)
+        <div class="mb-8 max-w-2xl mx-auto">
+            <img src="{{ str_starts_with($page->image, 'http') ? $page->image : asset(ltrim($page->image, '/')) }}" alt="{{ $page->title ?? 'Contact' }}" class="rounded-2xl shadow-xl w-full object-cover">
+        </div>
+        @endif
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 animate-fade-in-up">
                 Get in

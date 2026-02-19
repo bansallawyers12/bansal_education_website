@@ -36,7 +36,8 @@ class ContactController extends Controller
         }
 
         ContactSubmission::create([
-            'full_name' => trim($data['firstName'] . ' ' . $data['lastName']),
+            'first_name' => $data['firstName'],
+            'last_name' => $data['lastName'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'subject' => $data['subject'] ?? null,

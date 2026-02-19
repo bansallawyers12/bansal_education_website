@@ -7,6 +7,11 @@
 <!-- Services Hero Section -->
 <section class="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20 lg:py-32 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        @if($page && $page->image)
+        <div class="mb-8 max-w-2xl mx-auto">
+            <img src="{{ str_starts_with($page->image, 'http') ? $page->image : asset(ltrim($page->image, '/')) }}" alt="{{ $page->title ?? 'Student Services' }}" class="rounded-2xl shadow-xl w-full object-cover">
+        </div>
+        @endif
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                 Our
@@ -21,6 +26,15 @@
     </div>
 </section>
 
+@if($page && $page->body)
+{{-- Content from Admin: what you edit here is what visitors see --}}
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg prose-headings:text-navy prose-headings:font-bold prose-p:text-gray-700 prose-strong:text-blue-900 max-w-none">{!! $page->body !!}</div>
+    </div>
+</section>
+@else
+{{-- Default content when nothing is edited in admin --}}
 <!-- Introduction Section -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -90,6 +104,7 @@
         </div>
     </div>
 </section>
+@endif
 
 <!-- CTA Section -->
 <section class="py-20 bg-gradient-to-r from-blue-900 to-yellow-500">

@@ -4,9 +4,22 @@
 @section('description', 'Read inspiring success stories from our students who achieved their dreams in Australia\'s top universities with our expert guidance.')
 
 @section('content')
+@if($page && $page->body)
+{{-- Custom content from Admin: Edit in Site Pages → Success Stories --}}
+<section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none text-gray-700">{!! $page->body !!}</div>
+    </div>
+</section>
+@endif
 <!-- Success Stories Hero Section -->
 <section class="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20 lg:py-32">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        @if($page && $page->image)
+        <div class="mb-8 max-w-2xl mx-auto">
+            <img src="{{ str_starts_with($page->image, 'http') ? $page->image : asset(ltrim($page->image, '/')) }}" alt="{{ $page->title ?? 'Success Stories' }}" class="rounded-2xl shadow-xl w-full object-cover">
+        </div>
+        @endif
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                 Student

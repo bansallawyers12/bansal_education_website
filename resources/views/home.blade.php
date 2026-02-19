@@ -48,6 +48,9 @@
                 </div>
             </div>
             <div class="relative">
+                @if($page && $page->image)
+                <img src="{{ str_starts_with($page->image, 'http') ? $page->image : asset(ltrim($page->image, '/')) }}" alt="{{ $page->title ?? 'Featured' }}" class="rounded-2xl shadow-2xl w-full object-cover max-h-96">
+                @else
                 <div class="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-300">
                     <div class="text-center">
                         <div class="w-20 h-20 bg-gradient-to-r from-blue-900 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -69,12 +72,22 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="absolute -top-4 -right-4 w-24 h-24 bg-yellow-400 rounded-full opacity-20"></div>
                 <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-pink-400 rounded-full opacity-20"></div>
             </div>
         </div>
     </div>
 </section>
+
+@if($page && $page->body)
+{{-- Custom content from Admin: Edit in Site Pages → Home --}}
+<section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none text-gray-700">{!! $page->body !!}</div>
+    </div>
+</section>
+@endif
 
 <!-- Our Student Services -->
 <section class="py-20 bg-white">

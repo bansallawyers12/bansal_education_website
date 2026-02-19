@@ -49,7 +49,13 @@ class CmsPageController extends Controller
 
     public function edit(Page $cms_page): View
     {
-        return view('admin.cms-pages.edit', ['p' => $cms_page]);
+        $defaults = config('page_defaults', []);
+        $contentToEdit = $cms_page->body ?: ($defaults[$cms_page->slug] ?? '');
+
+        return view('admin.cms-pages.edit', [
+            'p' => $cms_page,
+            'contentToEdit' => $contentToEdit,
+        ]);
     }
 
     public function update(Request $request, Page $cms_page): RedirectResponse
@@ -61,13 +67,26 @@ class CmsPageController extends Controller
             'meta_description' => ['nullable', 'string', 'max:512'],
             'body' => ['nullable', 'string'],
             'image' => ['nullable', 'string', 'max:500'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
             'is_published' => ['boolean'],
         ]);
         $data['slug'] = $data['slug'] ?? Str::slug($data['title']);
         $data['is_published'] = $request->boolean('is_published');
 
+        if ($request->hasFile('image_file')) {
+            $upload = $request->file('image_file');
+            $dir = 'uploads/pages';
+            $path = public_path($dir);
+            if (! is_dir($path)) {
+                mkdir($path, 0755, true);
+            }
+            $name = Str::slug($cms_page->slug) . '-' . time() . '.' . $upload->getClientOriginalExtension();
+            $upload->move($path, $name);
+            $data['image'] = $dir . '/' . $name;
+        }
+
         $cms_page->update($data);
 
-        return redirect()->route('admin.cms-pages.index')->with('success', 'Page updated.');
+        return redirect()->route('admin.cms-pages.edit', $cms_page)->with('success', 'Page updated.');
     }
 }

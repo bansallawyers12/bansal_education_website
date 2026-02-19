@@ -13,30 +13,31 @@ use App\Http\Controllers\Email\DashboardController as EmailDashboardController;
 use App\Http\Controllers\Email\EmailTemplateController;
 use App\Http\Controllers\Email\InboundEmailController;
 use App\Http\Controllers\Email\OutboundEmailController;
+use App\Models\Page;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home');
+    return view('home', ['page' => Page::where('slug', 'home')->first()]);
 })->name('home');
 
 Route::get('/about', function () {
-    return view('about');
+    return view('about', ['page' => Page::where('slug', 'about')->first()]);
 })->name('about');
 
 Route::get('/courses', function () {
-    return view('courses');
+    return view('courses', ['page' => Page::where('slug', 'courses')->first()]);
 })->name('courses');
 
 Route::get('/contact', function () {
-    return view('contact');
+    return view('contact', ['page' => Page::where('slug', 'contact')->first()]);
 })->name('contact');
 
 Route::get('/services', function () {
-    return view('services');
+    return view('services', ['page' => Page::where('slug', 'services')->first()]);
 })->name('services');
 
 Route::get('/testimonials', function () {
-    return view('testimonials');
+    return view('testimonials', ['page' => Page::where('slug', 'testimonials')->first()]);
 })->name('testimonials');
 
 // Email (SendGrid): /email — Inbox, Drafts, Outbox, Sent, Trash

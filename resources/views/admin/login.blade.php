@@ -19,20 +19,20 @@
                         'gold': '#f59e0b',
                         'gold-light': '#fbbf24',
                     },
-                    fontFamily: {
-                        'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        'serif': ['Playfair Display', 'ui-serif', 'Georgia', 'serif'],
+                    fontFamily: { 'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100">
+<body class="font-sans antialiased min-h-screen flex flex-col" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fef3c7 100%);">
 
-    <header class="bg-white shadow-md">
+    <header class="bg-white/80 backdrop-blur shadow-sm border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <a href="{{ route('home') }}" class="flex items-center">
+            <a href="{{ route('home') }}" class="flex items-center group">
                 <img src="{{ asset('logo.png') }}?v=3" alt="Bansal Education" class="h-16 w-auto" onerror="this.style.display='none'">
                 <span class="text-xl font-bold text-navy ml-2 font-serif">Bansal Education World</span>
             </a>
@@ -41,7 +41,7 @@
 
     <main class="flex-1 flex items-center justify-center py-12 px-4">
         <div class="w-full max-w-md">
-            <div class="bg-white shadow-xl rounded-2xl p-8 border-2 border-gold/30">
+            <div class="bg-white shadow-card rounded-2xl p-8 border border-gray-100">
                 <div class="text-center mb-8">
                     <span class="inline-block bg-gold/20 text-navy text-xs font-semibold px-3 py-1 rounded-full mb-4">Admin Area</span>
                     <h1 class="text-2xl font-bold text-navy font-serif">Admin Login</h1>

@@ -46,6 +46,9 @@
     <meta property="og:description" content="@yield('description', optional($sitePage)->meta_description ?? 'Expert guidance for university admissions, course selection, and career planning in Australia\'s top universities.')">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
+    @if(optional($sitePage)->image)
+    <meta property="og:image" content="{{ str_starts_with($sitePage->image, 'http') ? $sitePage->image : asset(ltrim($sitePage->image, '/')) }}">
+    @endif
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">

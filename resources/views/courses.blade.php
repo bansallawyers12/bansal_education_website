@@ -4,9 +4,22 @@
 @section('description', 'Explore popular Australian courses including Engineering, Business, Healthcare, IT, Hospitality, and Trade courses from top universities with expert guidance.')
 
 @section('content')
+@if($page && $page->body)
+{{-- Custom content from Admin: Edit in Site Pages → Courses --}}
+<section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none text-gray-700">{!! $page->body !!}</div>
+    </div>
+</section>
+@endif
 <!-- Courses Hero Section -->
 <section class="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20 lg:py-32">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        @if($page && $page->image)
+        <div class="mb-8 max-w-2xl mx-auto">
+            <img src="{{ str_starts_with($page->image, 'http') ? $page->image : asset(ltrim($page->image, '/')) }}" alt="{{ $page->title ?? 'Courses' }}" class="rounded-2xl shadow-xl w-full object-cover">
+        </div>
+        @endif
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6 animate-fade-in-up">
                 Popular 

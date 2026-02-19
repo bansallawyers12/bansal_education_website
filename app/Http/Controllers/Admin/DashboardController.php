@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContactSubmission;
 use App\Models\Page;
 use Illuminate\View\View;
 
@@ -14,6 +15,17 @@ class DashboardController extends Controller
             ->orderByRaw("FIELD(slug, 'home', 'about', 'courses', 'services', 'testimonials', 'contact')")
             ->get();
 
-        return view('admin.dashboard', ['sitePages' => $sitePages]);
+        $contactSubmissions = ContactSubmission::query()
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        $unreadContactCount = ContactSubmission::where('is_read', false)->count();
+
+        return view('admin.dashboard', [
+            'sitePages' => $sitePages,
+            'contactSubmissions' => $contactSubmissions,
+            'unreadContactCount' => $unreadContactCount,
+        ]);
     }
 }

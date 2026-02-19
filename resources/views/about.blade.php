@@ -4,12 +4,25 @@
 @section('description', 'Learn about Bansal Education Group, Australia\'s most trusted education consultant with 10+ years of experience helping students achieve their dreams.')
 
 @section('content')
+@if($page && $page->body)
+{{-- Custom content from Admin: Edit in Site Pages → About Us --}}
+<section class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none text-gray-700">{!! $page->body !!}</div>
+    </div>
+</section>
+@endif
 <!-- About Hero Section -->
 <section class="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20 lg:py-32 overflow-hidden">
     <div class="absolute top-0 left-0 w-72 h-72 bg-yellow-500 rounded-full opacity-10 blur-3xl animate-float"></div>
     <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-900 rounded-full opacity-10 blur-3xl animate-float-reverse"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        @if($page && $page->image)
+        <div class="mb-8 max-w-2xl mx-auto">
+            <img src="{{ str_starts_with($page->image, 'http') ? $page->image : asset(ltrim($page->image, '/')) }}" alt="{{ $page->title ?? 'About Us' }}" class="rounded-2xl shadow-xl w-full object-cover">
+        </div>
+        @endif
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6 animate-fade-in-up">
                 About
