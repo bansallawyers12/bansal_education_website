@@ -96,7 +96,7 @@
         <!-- Mobile menu -->
         <div class="mobile-menu hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'bg-blue-50 text-navy' : 'text-gray-700 hover:text-navy hover:bg-gray-50' }} block px-3 py-2 text-base font-medium">Home11</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'bg-blue-50 text-navy' : 'text-gray-700 hover:text-navy hover:bg-gray-50' }} block px-3 py-2 text-base font-medium">Home</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'bg-blue-50 text-navy' : 'text-gray-700 hover:text-navy hover:bg-gray-50' }} block px-3 py-2 text-base font-medium">About Us</a>
                 <a href="{{ route('courses') }}" class="{{ request()->routeIs('courses') ? 'bg-blue-50 text-navy' : 'text-gray-700 hover:text-navy hover:bg-gray-50' }} block px-3 py-2 text-base font-medium">Courses</a>
                 <a href="{{ route('services') }}" class="{{ request()->routeIs('services') ? 'bg-blue-50 text-navy' : 'text-gray-700 hover:text-navy hover:bg-gray-50' }} block px-3 py-2 text-base font-medium">Student Services</a>
