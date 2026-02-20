@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "git:cleanup": "powershell -ExecutionPolicy Bypass -File ./scripts/git-cleanup.ps1"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
