@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="canonical" href="https://www.bansaleducation.com.au/">
+
     <title>@yield('title', optional($sitePage)->meta_title ?? 'Bansal Education Group - Australia\'s Most Trusted Education Consultant')</title>
     <meta name="description" content="@yield('description', optional($sitePage)->meta_description ?? 'Australia\'s most trusted education consultant. Expert guidance for university admissions, course selection, and career planning in Australia\'s top universities.')">
 
