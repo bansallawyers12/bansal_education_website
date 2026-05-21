@@ -184,6 +184,14 @@
                             <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Tell us about your goals *</label>
                             <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none" placeholder="What are your educational and career goals? How can we help you achieve them?">{{ old('message') }}</textarea>
                         </div>
+                        @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                        <div>
+                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            @error('g-recaptcha-response')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        @endif
                         <button type="submit" class="w-full bg-gradient-to-r from-blue-900 to-yellow-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:from-yellow-500 hover:to-blue-900 transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-105 transform">
                             Submit & Book Free Consultation
                         </button>
@@ -291,4 +299,8 @@
         </div>
     </div>
 </section>
+
+@if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endif
 @endsection

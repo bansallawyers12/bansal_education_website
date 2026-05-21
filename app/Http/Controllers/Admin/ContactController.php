@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactSubmission;
+use App\Rules\Recaptcha;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -12,7 +13,7 @@ class ContactController extends Controller
 {
     public function storePublic(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $rules = [
             'firstName' => ['required', 'string', 'max:255'],
             'lastName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email'],
@@ -21,7 +22,13 @@ class ContactController extends Controller
             'preferredCourse' => ['nullable', 'string', 'max:255'],
             'educationLevel' => ['nullable', 'string', 'max:255'],
             'message' => ['nullable', 'string'],
-        ]);
+        ];
+
+        if (config('services.recaptcha.site_key') && config('services.recaptcha.secret_key')) {
+            $rules['g-recaptcha-response'] = ['required', new Recaptcha];
+        }
+
+        $data = $request->validate($rules);
 
         $message = $data['message'] ?? '';
         if (! empty($data['preferredCourse'] ?? '') || ! empty($data['educationLevel'] ?? '')) {

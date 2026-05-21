@@ -1,5 +1,10 @@
 <?php
 session_start();
+require_once __DIR__.'/../bootstrap/recaptcha.php';
+
+$recaptchaEnabled = recaptcha_enabled();
+$recaptchaSiteKey = recaptcha_keys()['site_key'] ?? '';
+
 $page_title = "Contact Us - Bansal Education Group";
 $page_description = "Get in touch with Australia's most trusted education consultant. Book your free consultation today for expert guidance on your Australian education journey.";
 
@@ -31,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_form'])) {
         $error_message = 'Please fill in all required fields.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error_message = 'Please enter a valid email address.';
+    } elseif ($recaptchaEnabled && !verify_recaptcha($_POST['g-recaptcha-response'] ?? '')) {
+        $error_message = 'The reCAPTCHA verification failed. Please try again.';
     } else {
         // Form is valid - proceed with submission
         // Prepare email
@@ -311,6 +318,12 @@ ob_start();
                             <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 group-hover:border-blue-400 resize-none" placeholder="What are your educational and career goals? How can we help you achieve them?"><?php echo isset($message) ? htmlspecialchars($message) : ''; ?></textarea>
                         </div>
                         
+                        <?php if ($recaptchaEnabled): ?>
+                        <div>
+                            <div class="g-recaptcha" data-sitekey="<?php echo htmlspecialchars($recaptchaSiteKey); ?>"></div>
+                        </div>
+                        <?php endif; ?>
+
                         <button type="submit" name="submit_form" id="submitBtn" class="w-full bg-gradient-to-r from-blue-900 to-yellow-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:from-yellow-500 hover:to-blue-900 transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-105 transform disabled:opacity-50 disabled:cursor-not-allowed">
                             <span id="submitBtnText">Submit & Book Free Consultation</span>
                             <span id="submitBtnLoading" class="hidden">
@@ -442,9 +455,21 @@ $content = ob_get_clean();
 include 'layout.php';
 ?>
 
+<?php if ($recaptchaEnabled): ?>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php endif; ?>
+
 <script>
 // Show loading state on form submission
 function showLoadingState(event) {
+    <?php if ($recaptchaEnabled): ?>
+    if (typeof grecaptcha !== 'undefined' && !grecaptcha.getResponse()) {
+        event.preventDefault();
+        alert('Please complete the reCAPTCHA verification.');
+        return false;
+    }
+    <?php endif; ?>
+
     // Show loading state
     const submitBtn = document.getElementById('submitBtn');
     const submitBtnText = document.getElementById('submitBtnText');
