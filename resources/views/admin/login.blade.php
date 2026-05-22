@@ -74,6 +74,14 @@
                         <input type="checkbox" name="remember" id="remember" class="rounded border-gray-300 text-navy focus:ring-gold">
                         <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
                     </div>
+                    @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                    <div>
+                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                        @error('g-recaptcha-response')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    @endif
                     <button type="submit" class="w-full bg-gradient-to-r from-navy to-navy-dark text-white py-3.5 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-gold hover:from-gold hover:to-gold-light hover:text-navy hover:border-navy">
                         Sign in
                     </button>
@@ -89,5 +97,9 @@
     <footer class="bg-navy text-white/80 py-4 text-center text-sm">
         &copy; {{ date('Y') }} Bansal Education. All rights reserved.
     </footer>
+
+    @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
 </body>
 </html>

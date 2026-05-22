@@ -63,7 +63,9 @@ Route::prefix('email')->name('email.')->group(function () {
 Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
 Route::get('/admin', fn () => redirect()->route('admin.login'))->name('admin');
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login')->middleware('guest');
-Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.post')->middleware('guest');
+Route::post('/admin/login', [AuthController::class, 'login'])
+    ->middleware(['guest', 'throttle:5,1'])
+    ->name('admin.login.post');
 
 // Admin: authenticated + admin-only routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

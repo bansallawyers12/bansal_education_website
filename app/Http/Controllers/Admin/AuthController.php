@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Rules\Recaptcha;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,14 +21,23 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
+        $rules = [
             'email' => ['required', 'email'],
             'password' => ['required'],
-        ]);
+        ];
+
+        if (config('services.recaptcha.site_key') && config('services.recaptcha.secret_key')) {
+            $rules['g-recaptcha-response'] = ['required', new Recaptcha];
+        }
+
+        $data = $request->validate($rules);
 
         $remember = $request->boolean('remember');
 
-        if (! Auth::attempt($credentials, $remember)) {
+        if (! Auth::attempt([
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ], $remember)) {
             return back()->withErrors([
                 'email' => __('The provided credentials do not match our records.'),
             ])->onlyInput('email');
