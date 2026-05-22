@@ -4,6 +4,12 @@
 @section('heading', 'Outbox')
 
 @section('content')
+    @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key') && $emails->isNotEmpty())
+        <div id="outbox-recaptcha" class="mb-4 rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+            <p class="mb-2 text-xs text-slate-500">Complete reCAPTCHA before sending</p>
+            @include('partials.recaptcha')
+        </div>
+    @endif
     <div class="flex h-[calc(100vh-8rem)] flex-col gap-4 lg:flex-row lg:gap-6">
         {{-- Email list (table) --}}
         <div class="flex min-h-0 flex-1 flex-col rounded-xl border border-slate-800 bg-slate-900/50 lg:max-w-2xl">
@@ -136,4 +142,32 @@
             @endif
         </div>
     </div>
+
+    @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key') && $emails->isNotEmpty())
+        @push('scripts')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('form[action*="/outbox/"][action*="/send"]').forEach(function(form) {
+                    form.addEventListener('submit', function(e) {
+                        const response = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+                        if (!response) {
+                            e.preventDefault();
+                            alert('Please complete the reCAPTCHA verification.');
+                            return;
+                        }
+                        let input = form.querySelector('input[name="g-recaptcha-response"]');
+                        if (!input) {
+                            input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'g-recaptcha-response';
+                            form.appendChild(input);
+                        }
+                        input.value = response;
+                    });
+                });
+            });
+        </script>
+        @endpush
+    @endif
 @endsection

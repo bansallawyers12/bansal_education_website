@@ -40,23 +40,33 @@ Route::get('/testimonials', function () {
     return view('testimonials', ['page' => Page::where('slug', 'testimonials')->first()]);
 })->name('testimonials');
 
-// Email (SendGrid): /email — Inbox, Drafts, Outbox, Sent, Trash
-Route::get('/email', fn () => redirect()->route('email.dashboard'))->name('email');
-Route::prefix('email')->name('email.')->group(function () {
-    Route::get('/dashboard', EmailDashboardController::class)->name('dashboard');
-    Route::get('/emails', [InboundEmailController::class, 'index'])->name('emails.index');
-    Route::delete('/emails/inbound/{email}', [InboundEmailController::class, 'destroy'])->name('emails.inbound.destroy');
-    Route::get('/emails/compose', [ComposeEmailController::class, 'create'])->name('emails.compose');
-    Route::post('/emails/compose', [ComposeEmailController::class, 'store'])->name('emails.compose.store');
-    Route::put('/emails/compose/{email}', [ComposeEmailController::class, 'update'])->name('emails.compose.update');
-    Route::post('/emails/templates', [EmailTemplateController::class, 'store'])->name('emails.templates.store');
-    Route::get('/emails/drafts', [OutboundEmailController::class, 'drafts'])->name('emails.drafts');
-    Route::get('/emails/outbox', [OutboundEmailController::class, 'outbox'])->name('emails.outbox');
-    Route::post('/emails/outbox/{email}/send', [OutboundEmailController::class, 'send'])->name('emails.outbox.send');
-    Route::get('/emails/sent', [OutboundEmailController::class, 'sent'])->name('emails.sent');
-    Route::get('/emails/trash', [OutboundEmailController::class, 'trash'])->name('emails.trash');
-    Route::delete('/emails/outbound/{email}', [OutboundEmailController::class, 'destroy'])->name('emails.outbound.destroy');
-    Route::get('/emails/inbound/{email}', [InboundEmailController::class, 'show'])->name('emails.show');
+// Email (SendGrid): /email — admin-only; rate limits on write/send actions
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/email', fn () => redirect()->route('email.dashboard'))->name('email');
+    Route::prefix('email')->name('email.')->group(function () {
+        Route::get('/dashboard', EmailDashboardController::class)->name('dashboard');
+        Route::get('/emails', [InboundEmailController::class, 'index'])->name('emails.index');
+        Route::delete('/emails/inbound/{email}', [InboundEmailController::class, 'destroy'])->name('emails.inbound.destroy');
+        Route::get('/emails/compose', [ComposeEmailController::class, 'create'])->name('emails.compose');
+        Route::post('/emails/compose', [ComposeEmailController::class, 'store'])
+            ->middleware('throttle:30,1')
+            ->name('emails.compose.store');
+        Route::put('/emails/compose/{email}', [ComposeEmailController::class, 'update'])
+            ->middleware('throttle:30,1')
+            ->name('emails.compose.update');
+        Route::post('/emails/templates', [EmailTemplateController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('emails.templates.store');
+        Route::get('/emails/drafts', [OutboundEmailController::class, 'drafts'])->name('emails.drafts');
+        Route::get('/emails/outbox', [OutboundEmailController::class, 'outbox'])->name('emails.outbox');
+        Route::post('/emails/outbox/{email}/send', [OutboundEmailController::class, 'send'])
+            ->middleware('throttle:10,60')
+            ->name('emails.outbox.send');
+        Route::get('/emails/sent', [OutboundEmailController::class, 'sent'])->name('emails.sent');
+        Route::get('/emails/trash', [OutboundEmailController::class, 'trash'])->name('emails.trash');
+        Route::delete('/emails/outbound/{email}', [OutboundEmailController::class, 'destroy'])->name('emails.outbound.destroy');
+        Route::get('/emails/inbound/{email}', [InboundEmailController::class, 'show'])->name('emails.show');
+    });
 });
 
 // Admin: guest-only routes (also register 'login' for framework redirects)

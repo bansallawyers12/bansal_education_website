@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Email;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Email\Concerns\EnsuresEmailSendRateLimit;
 use App\Models\InboundEmail;
 use App\Models\OutboundEmail;
+use App\Rules\Recaptcha;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +15,8 @@ use Illuminate\View\View;
 
 class OutboundEmailController extends Controller
 {
+    use EnsuresEmailSendRateLimit;
+
     public function outbox(Request $request): View
     {
         $emails = OutboundEmail::where('status', OutboundEmail::STATUS_PENDING)
@@ -60,6 +64,14 @@ class OutboundEmailController extends Controller
         if ($email->status !== OutboundEmail::STATUS_PENDING) {
             return redirect()->route('email.emails.outbox')->with('error', 'Email is not pending.');
         }
+
+        if (config('services.recaptcha.site_key') && config('services.recaptcha.secret_key')) {
+            $request->validate([
+                'g-recaptcha-response' => ['required', new Recaptcha],
+            ]);
+        }
+
+        $this->ensureEmailSendRateLimit($request);
 
         try {
             Mail::mailer('sendgrid')->send([], [], function ($message) use ($email) {

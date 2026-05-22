@@ -69,6 +69,12 @@
             </div>
 
             {{-- Actions --}}
+            @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                    <p class="mb-2 text-xs text-slate-500">Required when sending email</p>
+                    @include('partials.recaptcha')
+                </div>
+            @endif
             <div class="flex flex-wrap gap-3 border-t border-slate-800 pt-6">
                 <button type="submit" name="action" value="draft" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-700">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
@@ -121,7 +127,19 @@
                 const bodyTextEl = document.getElementById('body_text');
                 if (bodyHtmlEl && bodyTextEl) bodyTextEl.value = bodyHtmlEl.value?.replace(/<[^>]*>/g, '') || bodyHtmlEl.value || '';
             }
-            composeForm?.addEventListener('submit', syncForm);
+            composeForm?.addEventListener('submit', function(e) {
+                syncForm();
+                const action = e.submitter?.value;
+                @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                if (action === 'send') {
+                    const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+                    if (!recaptchaResponse) {
+                        e.preventDefault();
+                        alert('Please complete the reCAPTCHA verification.');
+                    }
+                }
+                @endif
+            });
 
             // Send now via AJAX to capture exact error
             document.getElementById('send-now-btn')?.addEventListener('click', async function() {
@@ -131,11 +149,21 @@
                     composeForm.reportValidity();
                     return;
                 }
+                @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+                if (!recaptchaResponse) {
+                    alert('Please complete the reCAPTCHA verification.');
+                    return;
+                }
+                @endif
                 btn.disabled = true;
                 btn.textContent = 'Sending...';
                 const formData = new FormData(composeForm);
                 formData.set('action', 'send_now');
                 formData.append('_method', composeForm.querySelector('[name="_method"]')?.value || 'POST');
+                @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                formData.set('g-recaptcha-response', recaptchaResponse);
+                @endif
                 try {
                     const url = composeForm.getAttribute('action'); // use getAttribute: form.action is shadowed by buttons with name="action"
                     const method = (formData.get('_method') || 'POST').toUpperCase();
@@ -166,6 +194,9 @@
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Send now';
+                    @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+                    if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+                    @endif
                 }
             });
             const templateSelect = document.getElementById('template_select');
@@ -211,4 +242,9 @@
         });
     </script>
     @endpush
+    @if(config('services.recaptcha.site_key') && config('services.recaptcha.secret_key'))
+        @push('scripts')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        @endpush
+    @endif
 @endsection

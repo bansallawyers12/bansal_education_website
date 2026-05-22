@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Email;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Email\Concerns\EnsuresEmailSendRateLimit;
 use App\Models\EmailTemplate;
 use App\Models\OutboundEmail;
+use App\Rules\Recaptcha;
 use App\Services\SendGridService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +17,8 @@ use Illuminate\View\View;
 
 class ComposeEmailController extends Controller
 {
+    use EnsuresEmailSendRateLimit;
+
     public function __construct(
         private SendGridService $sendGridService
     ) {}
@@ -63,14 +67,22 @@ class ComposeEmailController extends Controller
 
     private function validateCompose(Request $request): array
     {
-        return $request->validate([
+        $rules = [
             'from_address' => 'required|email',
             'from_name' => 'nullable|string|max:255',
             'to_address' => 'required|email',
             'subject' => 'required|string|max:500',
             'body_text' => 'nullable|string',
             'body_html' => 'nullable|string',
-        ]);
+        ];
+
+        if (in_array($request->input('action'), ['send_now', 'send'], true)
+            && config('services.recaptcha.site_key')
+            && config('services.recaptcha.secret_key')) {
+            $rules['g-recaptcha-response'] = ['required', new Recaptcha];
+        }
+
+        return $request->validate($rules);
     }
 
     private function handleAction(Request $request, OutboundEmail $email): RedirectResponse|JsonResponse
@@ -93,6 +105,8 @@ class ComposeEmailController extends Controller
 
     private function sendNow(OutboundEmail $email): RedirectResponse|JsonResponse
     {
+        $this->ensureEmailSendRateLimit(request());
+
         try {
             Mail::mailer('sendgrid')->send([], [], function ($message) use ($email) {
                 $message->to($email->to_address)

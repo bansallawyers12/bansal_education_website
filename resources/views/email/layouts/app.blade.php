@@ -29,7 +29,10 @@
                     </div>
                     <span class="font-semibold text-slate-100">Email</span>
                 </div>
-                <a href="{{ route('home') }}" class="ml-auto text-xs text-slate-400 hover:text-slate-200">← Back to site</a>
+                <div class="ml-auto flex items-center gap-3">
+                    <a href="{{ route('home') }}" class="text-xs text-slate-400 hover:text-slate-200">Site</a>
+                    <a href="{{ route('admin.dashboard') }}" class="text-xs text-slate-400 hover:text-slate-200">Admin</a>
+                </div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 px-3">
                 <ul class="space-y-0.5">
