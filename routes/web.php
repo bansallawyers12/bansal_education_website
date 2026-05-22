@@ -96,5 +96,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('case-studies', [CaseStudyController::class, 'index'])->name('case-studies.index');
 });
 
-// Contact form submission (public)
-Route::post('/contact', [ContactController::class, 'storePublic'])->name('contact.store');
+// Contact form submission (public) — 2 submissions per hour per IP
+Route::post('/contact', [ContactController::class, 'storePublic'])
+    ->middleware('throttle:2,60')
+    ->name('contact.store');

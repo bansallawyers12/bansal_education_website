@@ -134,6 +134,11 @@
                     @unless(session('success'))
                     <form method="POST" action="{{ route('contact.store') }}" class="space-y-6" id="consultationForm">
                         @csrf
+                        {{-- Honeypot: hidden from users; bots that fill it are silently rejected --}}
+                        <div class="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+                            <label for="companyWebsite">Company Website</label>
+                            <input type="text" id="companyWebsite" name="companyWebsite" value="" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="firstName" class="block text-sm font-semibold text-gray-700 mb-2">First Name *</label>
