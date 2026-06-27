@@ -9,6 +9,19 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('inbound_emails')) {
+            return;
+        }
+
+        $indexes = collect(Schema::getIndexes('inbound_emails'))
+            ->filter(fn (array $index) => $index['unique'] ?? false)
+            ->flatMap(fn (array $index) => $index['columns'] ?? [])
+            ->all();
+
+        if (in_array('message_id', $indexes, true)) {
+            return;
+        }
+
         $duplicateMessageIds = DB::table('inbound_emails')
             ->whereNotNull('message_id')
             ->select('message_id')
@@ -35,6 +48,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('inbound_emails')) {
+            return;
+        }
+
         Schema::table('inbound_emails', function (Blueprint $table) {
             $table->dropUnique(['message_id']);
             $table->index('message_id');

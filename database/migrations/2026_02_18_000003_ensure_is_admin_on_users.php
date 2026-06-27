@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('users')) {
+            return;
+        }
+
         if (Schema::hasColumn('users', 'is_admin')) {
             return;
         }
@@ -18,6 +22,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('users')) {
+            return;
+        }
+
         if (Schema::hasColumn('users', 'is_admin')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->dropColumn('is_admin');

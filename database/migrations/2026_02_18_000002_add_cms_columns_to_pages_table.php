@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('pages')) {
+            return;
+        }
+
         Schema::table('pages', function (Blueprint $table) {
             if (! Schema::hasColumn('pages', 'title')) {
                 $table->string('title')->after('id');
@@ -32,6 +36,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('pages')) {
+            return;
+        }
+
         Schema::table('pages', function (Blueprint $table) {
             $table->dropColumn(['title', 'slug', 'body', 'image', 'is_published', 'meta']);
         });

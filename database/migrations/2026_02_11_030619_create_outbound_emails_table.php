@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('outbound_emails')) {
+            return;
+        }
+
         Schema::create('outbound_emails', function (Blueprint $table) {
             $table->id();
             $table->string('message_id')->nullable()->index();

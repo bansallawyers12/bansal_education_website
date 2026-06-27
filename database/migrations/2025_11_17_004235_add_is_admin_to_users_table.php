@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('users') || Schema::hasColumn('users', 'is_admin')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_admin')->default(false)->after('email');
         });
@@ -21,8 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_admin');
-        });
+        if (Schema::hasTable('users') && Schema::hasColumn('users', 'is_admin')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('is_admin');
+            });
+        }
     }
 };

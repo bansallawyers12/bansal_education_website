@@ -8,21 +8,31 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('inbound_emails', function (Blueprint $table) {
-            $table->softDeletes();
-        });
-        Schema::table('outbound_emails', function (Blueprint $table) {
-            $table->softDeletes();
-        });
+        if (Schema::hasTable('inbound_emails') && ! Schema::hasColumn('inbound_emails', 'deleted_at')) {
+            Schema::table('inbound_emails', function (Blueprint $table) {
+                $table->softDeletes();
+            });
+        }
+
+        if (Schema::hasTable('outbound_emails') && ! Schema::hasColumn('outbound_emails', 'deleted_at')) {
+            Schema::table('outbound_emails', function (Blueprint $table) {
+                $table->softDeletes();
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('inbound_emails', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
-        Schema::table('outbound_emails', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
+        if (Schema::hasTable('inbound_emails') && Schema::hasColumn('inbound_emails', 'deleted_at')) {
+            Schema::table('inbound_emails', function (Blueprint $table) {
+                $table->dropSoftDeletes();
+            });
+        }
+
+        if (Schema::hasTable('outbound_emails') && Schema::hasColumn('outbound_emails', 'deleted_at')) {
+            Schema::table('outbound_emails', function (Blueprint $table) {
+                $table->dropSoftDeletes();
+            });
+        }
     }
 };

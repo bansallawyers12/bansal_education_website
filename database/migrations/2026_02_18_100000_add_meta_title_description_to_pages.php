@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('pages')) {
+            return;
+        }
+
         Schema::table('pages', function (Blueprint $table) {
             if (! Schema::hasColumn('pages', 'meta_title')) {
                 $table->string('meta_title')->nullable()->after('slug');
@@ -20,6 +24,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('pages')) {
+            return;
+        }
+
         Schema::table('pages', function (Blueprint $table) {
             $table->dropColumn(['meta_title', 'meta_description']);
         });

@@ -18,12 +18,12 @@
 
     <title>@yield('title', optional($sitePage)->meta_title ?? 'Bansal Education Group - Australia\'s Most Trusted Education Consultant')</title>
     <meta name="description" content="@yield('description', optional($sitePage)->meta_description ?? 'Australia\'s most trusted education consultant. Expert guidance for university admissions, course selection, and career planning in Australia\'s top universities.')">
+    <meta name="google-site-verification" content="TCpqgf9EwE4Fm4rvFFZeNiQ4_GuE0C-2jmcb1YuAQG8" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=playfair-display:400,500,600,700" rel="stylesheet" />
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
