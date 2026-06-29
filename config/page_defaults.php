@@ -98,7 +98,7 @@ HTML,
 <h3>Contact Details</h3>
 <p><strong>Location:</strong> Next to Flight Center, Level 8/278 Collins Street, Melbourne VIC 3000, Australia</p>
 <p><strong>Phone:</strong> 03 9602 1330</p>
-<p><strong>Email:</strong> Info@bansaleducation.com.au</p>
+<p><strong>Email:</strong> <a href="/contact" data-email-user="Info" data-email-domain="bansaleducation.com.au" class="js-email-link"></a></p>
 <p><strong>Hours:</strong> Mon-Fri 9:30AM-5:30PM</p>
 HTML,
 ];

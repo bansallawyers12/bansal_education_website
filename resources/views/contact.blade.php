@@ -66,7 +66,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 mb-1">Email Us</h3>
-                        <a href="mailto:Info@bansaleducation.com.au" class="text-blue-900 font-semibold hover:text-yellow-600 transition-colors break-all">Info@bansaleducation.com.au</a>
+                        <a href="{{ route('contact') }}" data-email-user="Info" data-email-domain="bansaleducation.com.au" class="js-email-link text-blue-900 font-semibold hover:text-yellow-600 transition-colors break-all"></a>
                         <p class="text-sm text-gray-600">We reply within 24hrs</p>
                     </div>
                 </div>
@@ -300,7 +300,7 @@
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="tel:0396021330" class="bg-white text-blue-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-110 transform">Call Us Now</a>
             <a href="https://wa.me/61406660960" class="bg-green-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-110 transform">WhatsApp Us</a>
-            <a href="mailto:Info@bansaleducation.com.au" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300">Send Email</a>
+            <a href="{{ route('contact') }}" data-email-user="Info" data-email-domain="bansaleducation.com.au" class="js-email-link border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300">Send Email</a>
         </div>
     </div>
 </section>

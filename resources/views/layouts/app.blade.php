@@ -154,7 +154,7 @@
                         <p>Level 8/278 Collins Street</p>
                         <p>Melbourne VIC 3000, Australia</p>
                         <p>03 9602 1330</p>
-                        <p>Info@bansaleducation.com.au</p>
+                        <p><a href="{{ route('contact') }}" data-email-user="Info" data-email-domain="bansaleducation.com.au" class="js-email-link text-gray-300 hover:text-white transition-colors"></a></p>
                     </div>
                 </div>
             </div>
@@ -180,6 +180,14 @@
                     mobileMenu.classList.toggle('hidden');
                 });
             }
+
+            document.querySelectorAll('.js-email-link[data-email-user][data-email-domain]').forEach(function(link) {
+                var email = link.dataset.emailUser + '@' + link.dataset.emailDomain;
+                link.href = 'mailto:' + email;
+                if (!link.textContent.trim()) {
+                    link.textContent = email;
+                }
+            });
         });
     </script>
 
